@@ -3,7 +3,6 @@ trait TrafficSniffer{
 }
 
 class TestTrafficSniffer (val handler: Int => Unit,val values: Iterator[Int]) extends TrafficSniffer {
-//  val newPacketHandler = this.handler;
   def getNextValue(): Int = values.next()
 
   def handleNewPacket(): Unit ={
@@ -15,28 +14,44 @@ class TestTrafficSniffer (val handler: Int => Unit,val values: Iterator[Int]) ex
   }
 }
 
-object Producer extends App {
-  import java.util.Properties
+class LiveTrafficSniffer extends TrafficSniffer{
+  override def gotPacket(size: Int): Unit = ???
+}
 
+trait Producer{
+  def sendMessage(value: String)
+}
+
+class TestProducer (val handler: String => Unit) extends Producer {
+  override def sendMessage(value: String): Unit = {
+    handler(value)
+  }
+}
+
+class LiveProducer extends Producer{
+  import java.util.Properties
   import org.apache.kafka.clients.producer._
+
+  val TOPIC="alerts"
 
   val  props = new Properties()
   props.put("bootstrap.servers", "localhost:2181")
-
   props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer")
   props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer")
 
-    val producer = new KafkaProducer[String, String](props)
+  val producer = new KafkaProducer[String, String](props)
 
-    val TOPIC="alerts"
+//  override def finalize(): Unit = {
+//    producer.close()
+//    super.finalize()
+//  }
 
-    for(i<- 1 to 50){
-      val record = new ProducerRecord(TOPIC, "key", s"hello $i")
-      producer.send(record)
-    }
-
-    val record = new ProducerRecord(TOPIC, "key", "the end "+new java.util.Date)
+  override def sendMessage(value: String): Unit = {
+    val record = new ProducerRecord(TOPIC, "key", "out of limit")
     producer.send(record)
+  }
+}
 
-    producer.close()
+object ProducerApp extends App {
+
 }
