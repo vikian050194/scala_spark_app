@@ -1,3 +1,20 @@
+trait TrafficSniffer{
+  def gotPacket(size: Int)
+}
+
+class TestTrafficSniffer (val handler: Int => Unit,val values: Iterator[Int]) extends TrafficSniffer {
+//  val newPacketHandler = this.handler;
+  def getNextValue(): Int = values.next()
+
+  def handleNewPacket(): Unit ={
+    gotPacket(getNextValue())
+  }
+
+  override def gotPacket(size: Int): Unit = {
+    handler(size)
+  }
+}
+
 object Producer extends App {
   import java.util.Properties
 
