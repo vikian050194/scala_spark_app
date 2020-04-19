@@ -8,3 +8,4 @@ libraryDependencies += "org.scalactic" %% "scalactic" % "3.1.1"
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.1.1" % "test"
 
 libraryDependencies += "org.apache.kafka" %% "kafka" % "2.3.1"
+libraryDependencies += "org.apache.spark" %% "spark-streaming" % "2.4.5" % "provided"
