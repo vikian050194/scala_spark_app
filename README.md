@@ -34,10 +34,35 @@
    sudo curl -L "https://github.com/docker/compose/releases/download/1.25.5/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
    sudo chmod +x /usr/local/bin/docker-compose 
    ```
-3. Заполнение БД необходимыми данными
+5. Заполнение БД необходимыми данными
     - Выполнить сл. команду в терминале, находясь в папке проекта
       ```
       docker-compose up -d
       ```
     - Пройти по [ссылке](http://localhost:8080/?pgsql=db&username=postgres_user&db=traffic_limits&ns=public&import=) и авторизоваться (пароль находится в [.ENV](.ENV) файле), после чего выполнить импорт из [limits_per_hour.sql](limits_per_hour.sql)
-4. next step...
+6. Установка и запуск Apache Kafka
+    - Создадим нового пользователя
+      ```
+      sudo useradd kafka -m
+      sudo passwd kafka
+      sudo adduser kafka sudo
+      ```
+    - Скачаем и распакуем
+      ```
+      wget -P /YOUR_PATH https://apache-mirror.rbc.ru/pub/apache/kafka/2.5.0/kafka_2.12-2.5.0.tgz
+      tar -xvzf /YOUR_PATH/kafka_2.12-2.5.0.tgz
+      ln -s /YOUR_PATH/kafka_2.12-2.5.0 kafka
+      ```
+    - Запустим Zookeeper
+      ```aidl
+      cd ~/kafka
+      bin/zookeeper-server-start.sh config/zookeeper.properties
+      ```
+    - В отдельном терминале запустим Kafka
+      ```
+      bin/kafka-server-start.sh config/server.properties
+      ```
+    - В отдельном терминале создадим новый топик alerts
+      ```
+      bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic alerts
+      ```
