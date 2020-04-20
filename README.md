@@ -66,3 +66,27 @@
       ```
       bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic alerts
       ```
+7. Установка Apache Spark
+    - Установим Scala
+      ```
+      sudo apt-get install scala
+      ```
+    - Скачаем и распакуем Spark
+      ```
+      wget https://archive.apache.org/dist/spark/spark-2.4.2/spark-2.4.2-bin-hadoop2.7.tgz
+      sudo tar xvf spark-2.4.2-bin-hadoop2.7.tgz -C /usr/local/spark
+      ```
+    - Добавим путь к Spark
+      ```
+      vim ~/.bashrc
+      ```
+      Две новые строки
+      ```
+      SPARK_HOME=/usr/local/spark
+      export PATH=$SPARK_HOME/bin:$PATH
+      ```
+      После сохранения изменений и выходи из редактора выполним команду
+      ```
+      source ~/.bashrc
+      ```
+      
